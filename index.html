@@ -1569,9 +1569,9 @@ html {
   <!-- Hero Section -->
   <section class="hero-section" id="heroSection">
     <div class="hero-content">
-      <div class="hero-logo"><img src="assets/fa-mark-white-transparent.png" alt="FA Logistics" width="516" height="548"></div>
+      <div class="hero-logo"><a href="https://fastaccs.com" style="display:inline-block"><img src="assets/fa-mark-white-transparent.png" alt="FA Logistics" width="516" height="548"></a></div>
       <div class="hero-brand-img">
-        <img src="assets/fa-logistics-text-white-transparent.png" alt="FA Logistics" width="1320" height="268">
+        <a href="https://fastaccs.com" style="display:inline-block"><img src="assets/fa-logistics-text-white-transparent.png" alt="FA Logistics" width="1320" height="268"></a>
       </div>
       <h1 class="sr-only">FA Logistics — Gift & Food Delivery</h1>
       <p class="hero-tagline">We Deliver Fast • We Deliver Worldwide</p>
@@ -1589,8 +1589,8 @@ html {
   <header class="header" id="mainHeader">
     <div class="header-top">
       <div class="brand">
-        <div class="logo-placeholder"><img src="assets/fa-mark-white-transparent.png" alt="FA Logistics" width="516" height="548"></div>
-        <div class="brand-name">FA LOGISTICS</div>
+        <div class="logo-placeholder"><a href="https://fastaccs.com" style="display:inline-block"><img src="assets/fa-mark-white-transparent.png" alt="FA Logistics" width="516" height="548"></a></div>
+        <a href="https://fastaccs.com" class="brand-name" style="text-decoration:none;color:inherit">FA LOGISTICS</a>
         <div class="tagline">WE DELIVER</div>
       </div>
       
@@ -2258,22 +2258,24 @@ html {
     function proceedToWhatsApp() {
       if (cart.length === 0) return;
       
-      let message = `Hi FA Logistics! 👋\n\n`;
-      message += `I would like to order the following items:\n\n`;
+      let message = `ORDER SUMMARY\n\n`;
       
       cart.forEach((item, index) => {
-        message += `${index + 1}. ${item.product.name}\n`;
+        message += `${index + 1}. ${item.product.name}`;
         if (item.variant) {
-          message += `   ↳ ${item.variant.name}\n`;
+          message += ` (${item.variant.name})`;
         }
-        message += `   💰 ${item.price}\n\n`;
+        message += ` — ${item.price}\n`;
       });
       
       const total = cart.reduce((sum, item) => sum + item.priceValue, 0);
-      message += `📊 Total: ₦${total.toLocaleString()}\n\n`;
-      message += `📍 Delivery Location: [Please specify]\n`;
-      message += `📅 Preferred Delivery Date: [Please specify]\n\n`;
-      message += `Please confirm availability and delivery details. Thank you!`;
+      message += `\nTotal: ₦${total.toLocaleString()}\n`;
+      message += `\n---\n`;
+      message += `DELIVERY DETAILS (please fill in)\n\n`;
+      message += `Receiver's Name:\nFull Address:\nPhone Number:\n\nSender's Name:\n`;
+      message += `\n---\n`;
+      message += `We will confirm availability and estimated delivery date.\n\n`;
+      message += `Thank you for trusting FA Logistics.`;
       
       const encodedMessage = encodeURIComponent(message);
       const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
