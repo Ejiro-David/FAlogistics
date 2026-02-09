@@ -18,6 +18,4 @@ Open `http://localhost:8000` in a browser.
 - `products.csv` — Product data
 - `assets/` — Brand assets
 
-## Contact
 
-Orders and inquiries via WhatsApp: **+234 815 852 7977**
