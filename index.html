@@ -738,10 +738,29 @@ body.no-scroll {
   border-radius: var(--r-sm);
   margin-bottom: 10px;
   transition: 180ms ease;
+  align-items: center;
 }
 
 .cart-item:hover {
   background: rgba(255,255,255,0.06);
+}
+
+.cart-item-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+}
+
+.cart-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .cart-item-details {
@@ -952,6 +971,23 @@ body.no-scroll {
   color: rgba(255, 255, 255, 0.8);
   margin: 0 0 40px 0;
   animation: fadeInUp 0.8s ease-out 0.3s both;
+}
+
+.trust-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0 0 28px 0;
+  animation: fadeInUp 0.8s ease-out 0.25s both;
+}
+
+.trust-item {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
 }
 
 .hero-buttons {
@@ -1192,6 +1228,18 @@ body.no-scroll {
   margin-top: 80px;
 }
 
+.footer-tagline {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+  font-family: var(--font-head);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+  text-align: center;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
@@ -1388,7 +1436,7 @@ html {
 .detail-image {
   width: 100%;
   aspect-ratio: 1;
-  background: var(--bg);
+  background: #1a1a2e;
   border-radius: 16px 16px 0 0;
   overflow: hidden;
   display: grid;
@@ -1399,7 +1447,7 @@ html {
 .detail-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .detail-body {
@@ -1552,7 +1600,7 @@ html {
   }
 
   .detail-image {
-    aspect-ratio: 4/3;
+    aspect-ratio: 3/4;
   }
 
   .back-to-top {
@@ -1562,6 +1610,140 @@ html {
     height: 36px;
   }
 }
+
+/* Checkout Location Form Overlay */
+.checkout-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1003;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.checkout-overlay.active {
+  display: flex;
+}
+
+.checkout-form-content {
+  background: linear-gradient(180deg, var(--bg-elev-2), var(--bg-elev-1));
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  padding: 28px 24px;
+  max-width: 440px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-2);
+}
+
+.checkout-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.checkout-form-title {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.checkout-form-subtitle {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.checkout-field {
+  margin-bottom: 16px;
+}
+
+.checkout-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.checkout-select,
+.checkout-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-size: 14px;
+  font-family: var(--font-body);
+  transition: 180ms ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.checkout-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  cursor: pointer;
+}
+
+.checkout-select:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.checkout-select:focus,
+.checkout-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(255,255,255,0.08);
+}
+
+.checkout-input::placeholder {
+  color: var(--text-dim);
+}
+
+.checkout-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.checkout-send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkout-disclaimer {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+  margin: 14px 0 0 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .checkout-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .checkout-form-content {
+    border-radius: 16px 16px 0 0;
+    max-height: 85vh;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -1574,9 +1756,15 @@ html {
         <a href="https://fastaccs.com" style="display:inline-block"><img src="assets/fa-logistics-text-white-transparent.png" alt="FA Logistics" width="1320" height="268"></a>
       </div>
       <h1 class="sr-only">FA Logistics — Gift & Food Delivery</h1>
-      <p class="hero-tagline">We Deliver Fast • We Deliver Worldwide</p>
+      <p class="hero-tagline">We Deliver Fast · We Deliver Worldwide</p>
+      <div class="trust-bar">
+        <span class="trust-item">🔒 Secure Checkout</span>
+        <span class="trust-item">📦 Tracked Delivery</span>
+        <span class="trust-item">⚡ Same-Day Available</span>
+        <span class="trust-item">✨ Premium Quality</span>
+      </div>
       <p class="hero-description">
-        Send flowers, food, and gifts to the people you care about — fast, smooth, and stress free. Choose from 1400+ premium curated products, delivered reliably to the US, Canada, Europe, Asia, and more.
+        1,400+ curated gifts delivered to the US, Canada, UK, Europe, Asia &amp; Africa. Every order is tracked, securely handled, and backed by real human support on WhatsApp.
       </p>
       <div class="hero-buttons">
         <a href="#products" class="hero-btn hero-btn-primary">Browse Products</a>
@@ -1674,6 +1862,7 @@ html {
 
   <!-- Footer -->
   <footer class="footer">
+    <div class="footer-tagline">FA Logistics — WE DELIVER.</div>
     <div class="footer-bottom">
       <div class="footer-credit">© 2026 FA Logistics. All rights reserved.</div>
       <div class="footer-credit">
@@ -1750,6 +1939,38 @@ html {
     </div>
   </div>
 
+  <!-- Checkout Location Form Overlay -->
+  <div class="checkout-overlay" id="checkoutOverlay">
+    <div class="checkout-form-content">
+      <div class="checkout-form-header">
+        <h2 class="checkout-form-title">📍 Delivery Location</h2>
+        <button class="modal-close" id="checkoutFormClose">×</button>
+      </div>
+      <p class="checkout-form-subtitle">Select your delivery destination so we can confirm availability and give you an accurate quote.</p>
+      <div class="checkout-field">
+        <label class="checkout-label" for="checkoutCountry">Country</label>
+        <select class="checkout-select" id="checkoutCountry">
+          <option value="">Select country…</option>
+        </select>
+      </div>
+      <div class="checkout-field">
+        <label class="checkout-label" for="checkoutState">State / Region</label>
+        <select class="checkout-select" id="checkoutState" disabled>
+          <option value="">Select country first…</option>
+        </select>
+      </div>
+      <div class="checkout-field">
+        <label class="checkout-label" for="checkoutCity">City (optional)</label>
+        <input type="text" class="checkout-input" id="checkoutCity" placeholder="e.g. Oklahoma, London, Houston…">
+      </div>
+      <div class="checkout-actions">
+        <button class="btn-modal btn-order checkout-send-btn" id="checkoutSendBtn">Send Order via WhatsApp</button>
+        <button class="btn-modal btn-cancel" id="checkoutCancelBtn">Back to Cart</button>
+      </div>
+      <p class="checkout-disclaimer">Prices may vary by destination. We'll confirm final pricing and delivery timeline on WhatsApp.</p>
+    </div>
+  </div>
+
   <script>
     // WhatsApp Number
     const WHATSAPP_NUMBER = '2348158527977';
@@ -1787,6 +2008,9 @@ html {
         filteredProducts = [...allProducts];
         renderProducts();
         updateResultsCount();
+        
+        // Check for shareable product link
+        checkProductUrlParam();
       } catch (error) {
         console.error('Error loading products:', error);
         document.getElementById('productsGrid').innerHTML = '<div class="loading">Error loading products. Please refresh.</div>';
@@ -2243,8 +2467,13 @@ html {
       totalAmount.textContent = `₦${total.toLocaleString()}`;
       
       // Render cart items
-      container.innerHTML = cart.map(item => `
+      container.innerHTML = cart.map(item => {
+        const thumbContent = item.product.imageUrl
+          ? `<img src="${item.product.imageUrl}" alt="" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${item.product.emoji}</span>';">`
+          : `<span>${item.product.emoji}</span>`;
+        return `
         <div class="cart-item">
+          <div class="cart-item-thumb">${thumbContent}</div>
           <div class="cart-item-details">
             <div class="cart-item-name">${item.product.name}</div>
             ${item.variant ? `<div class="cart-item-variant">${item.variant.name}</div>` : ''}
@@ -2254,7 +2483,7 @@ html {
             ×
           </button>
         </div>
-      `).join('');
+      `}).join('');
     }
     
     function shortenName(name) {
@@ -2267,38 +2496,107 @@ html {
       return short;
     }
 
-    function getProductCode(id) {
-      return `PROD-${String(id).padStart(4, '0')}`;
+    function getProductCode(product) {
+      return product.productId || `PROD-${String(product.id).padStart(4, '0')}`;
     }
 
     function proceedToWhatsApp() {
       if (cart.length === 0) return;
       
+      // Show location form overlay instead of going directly to WhatsApp
+      showCheckoutForm();
+    }
+    
+    // Country → State/Region data (key markets + worldwide)
+    const LOCATION_DATA = {
+      'Nigeria': ['Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno','Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','FCT - Abuja','Gombe','Imo','Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi','Kwara','Lagos','Nasarawa','Niger','Ogun','Ondo','Osun','Oyo','Plateau','Rivers','Sokoto','Taraba','Yobe','Zamfara'],
+      'United States': ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming','Washington D.C.'],
+      'United Kingdom': ['England','Scotland','Wales','Northern Ireland','London'],
+      'Canada': ['Alberta','British Columbia','Manitoba','New Brunswick','Newfoundland and Labrador','Nova Scotia','Ontario','Prince Edward Island','Quebec','Saskatchewan'],
+      'Ghana': ['Greater Accra','Ashanti','Central','Eastern','Northern','Western','Volta','Upper East','Upper West','Brong-Ahafo'],
+      'South Africa': ['Eastern Cape','Free State','Gauteng','KwaZulu-Natal','Limpopo','Mpumalanga','North West','Northern Cape','Western Cape'],
+      'Germany': ['Baden-Württemberg','Bavaria','Berlin','Brandenburg','Bremen','Hamburg','Hesse','Lower Saxony','Mecklenburg-Vorpommern','North Rhine-Westphalia','Rhineland-Palatinate','Saarland','Saxony','Saxony-Anhalt','Schleswig-Holstein','Thuringia'],
+      'France': ['Île-de-France','Provence-Alpes-Côte d\'Azur','Auvergne-Rhône-Alpes','Nouvelle-Aquitaine','Occitanie','Hauts-de-France','Grand Est','Pays de la Loire','Brittany','Normandy'],
+      'Australia': ['New South Wales','Victoria','Queensland','Western Australia','South Australia','Tasmania','ACT','Northern Territory'],
+      'UAE': ['Abu Dhabi','Dubai','Sharjah','Ajman','Umm Al Quwain','Ras Al Khaimah','Fujairah'],
+      'India': ['Maharashtra','Delhi','Karnataka','Tamil Nadu','Telangana','Gujarat','West Bengal','Rajasthan','Uttar Pradesh','Kerala'],
+      'Ireland': ['Dublin','Cork','Galway','Limerick','Waterford','Kilkenny'],
+      'Netherlands': ['North Holland','South Holland','Utrecht','North Brabant','Gelderland','Overijssel'],
+      'Italy': ['Lombardy','Lazio','Campania','Veneto','Piedmont','Tuscany','Emilia-Romagna','Sicily'],
+      'Spain': ['Madrid','Catalonia','Andalusia','Valencia','Basque Country','Galicia'],
+      'Saudi Arabia': ['Riyadh','Makkah','Eastern Province','Madinah','Asir','Qassim'],
+      'Kenya': ['Nairobi','Mombasa','Kisumu','Nakuru','Eldoret'],
+      'Other Country': []
+    };
+    
+    function showCheckoutForm() {
+      const overlay = document.getElementById('checkoutOverlay');
+      const countrySelect = document.getElementById('checkoutCountry');
+      const stateSelect = document.getElementById('checkoutState');
+      
+      // Populate countries
+      countrySelect.innerHTML = '<option value="">Select country…</option>';
+      Object.keys(LOCATION_DATA).forEach(country => {
+        const opt = document.createElement('option');
+        opt.value = country;
+        opt.textContent = country;
+        countrySelect.appendChild(opt);
+      });
+      
+      // Reset state
+      stateSelect.innerHTML = '<option value="">Select country first…</option>';
+      stateSelect.disabled = true;
+      document.getElementById('checkoutCity').value = '';
+      
+      overlay.classList.add('active');
+      document.body.classList.add('no-scroll');
+    }
+    
+    function hideCheckoutForm() {
+      document.getElementById('checkoutOverlay').classList.remove('active');
+      document.body.classList.remove('no-scroll');
+    }
+    
+    function sendToWhatsApp() {
+      const country = document.getElementById('checkoutCountry').value;
+      const state = document.getElementById('checkoutState').value;
+      const city = document.getElementById('checkoutCity').value.trim();
+      
+      if (!country) {
+        document.getElementById('checkoutCountry').focus();
+        return;
+      }
+      
+      // Build clean message
       let message = `ORDER SUMMARY\n`;
       message += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
       
       cart.forEach((item, index) => {
-        const code = getProductCode(item.product.id);
-        const shortName = shortenName(item.product.name);
-        message += `${index + 1}. ${shortName}\n`;
+        const code = getProductCode(item.product);
+        message += `${index + 1}. ${code} — ${item.price}\n`;
         if (item.variant) {
-          message += `   ${item.variant.name}\n`;
+          message += `   ↳ ${item.variant.name}\n`;
         }
-        message += `   ${item.price}  [${code}]\n\n`;
       });
       
       const total = cart.reduce((sum, item) => sum + item.priceValue, 0);
+      message += `\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+      message += `TOTAL: ₦${total.toLocaleString()}\n\n`;
+      
+      // Location
+      let location = `📍 ${country}`;
+      if (state) location += `, ${state}`;
+      if (city) location += `, ${city}`;
+      message += `${location}\n\n`;
+      
       message += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-      message += `Total: ₦${total.toLocaleString()}\n\n`;
-      message += `DELIVERY DETAILS\n\n`;
-      message += `Receiver's Name:\nFull Address:\nPhone Number:\n\nSender's Name:\n\n`;
-      message += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-      message += `We will confirm availability and delivery date.\nThank you — FAST ACCS`;
+      message += `Prices may vary by destination.\nWe'll confirm final pricing & delivery ETA.\n— FA Logistics`;
       
       const encodedMessage = encodeURIComponent(message);
       const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
       
       window.open(whatsappURL, '_blank');
+      hideCheckoutForm();
       hideCartModal();
     }
     
@@ -2315,6 +2613,13 @@ html {
       if (!product) return;
       
       const modal = document.getElementById('detailModal');
+      
+      // Update URL with shareable link (without reloading)
+      if (product.productId) {
+        const url = new URL(window.location);
+        url.searchParams.set('product', product.productId);
+        history.replaceState(null, '', url);
+      }
       
       // Image
       document.getElementById('detailImage').innerHTML = product.imageUrl 
@@ -2365,6 +2670,26 @@ html {
     function hideDetailModal() {
       document.getElementById('detailModal').classList.remove('active');
       document.body.classList.remove('no-scroll');
+      // Clear product param from URL
+      const url = new URL(window.location);
+      url.searchParams.delete('product');
+      history.replaceState(null, '', url);
+    }
+    
+    // Check URL for ?product=PROD-XXXX and auto-open detail modal
+    function checkProductUrlParam() {
+      const params = new URLSearchParams(window.location.search);
+      const prodCode = params.get('product');
+      if (!prodCode) return;
+      
+      const product = allProducts.find(p => p.productId === prodCode);
+      if (product) {
+        // Small delay to let page settle, then scroll to products and open modal
+        setTimeout(() => {
+          document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+          setTimeout(() => showProductDetail(product.id), 400);
+        }, 300);
+      }
     }
     
     function addToCartFromDetail() {
@@ -2575,6 +2900,37 @@ html {
     document.getElementById('cartModal').addEventListener('click', (e) => {
       if (e.target.id === 'cartModal') {
         hideCartModal();
+      }
+    });
+    
+    // Checkout form controls
+    document.getElementById('checkoutFormClose').addEventListener('click', hideCheckoutForm);
+    document.getElementById('checkoutCancelBtn').addEventListener('click', hideCheckoutForm);
+    document.getElementById('checkoutSendBtn').addEventListener('click', sendToWhatsApp);
+    document.getElementById('checkoutOverlay').addEventListener('click', (e) => {
+      if (e.target.id === 'checkoutOverlay') hideCheckoutForm();
+    });
+    
+    // Country → State cascade
+    document.getElementById('checkoutCountry').addEventListener('change', function() {
+      const stateSelect = document.getElementById('checkoutState');
+      const states = LOCATION_DATA[this.value] || [];
+      
+      if (states.length > 0) {
+        stateSelect.innerHTML = '<option value="">Select state/region…</option>';
+        states.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s;
+          opt.textContent = s;
+          stateSelect.appendChild(opt);
+        });
+        stateSelect.disabled = false;
+      } else if (this.value === 'Other Country') {
+        stateSelect.innerHTML = '<option value="">Type city below instead</option>';
+        stateSelect.disabled = true;
+      } else {
+        stateSelect.innerHTML = '<option value="">Select country first…</option>';
+        stateSelect.disabled = true;
       }
     });
     
