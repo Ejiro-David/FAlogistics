@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FA Logistics — Gift & Food Delivery</title>
+  <title>FAST ACCS — SMM Market & Global Gifting Service</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/fa-mark-white-transparent.png">
@@ -11,19 +11,19 @@
 
   <!-- Open Graph / WhatsApp Preview -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="FA Logistics — Gift & Food Delivery">
-  <meta property="og:description" content="Send flowers, food, and gifts to the people you care about — fast, smooth, and stress free. 1400+ curated products, delivered worldwide.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/Ejiro-David/fa-logistics-product-images/master/branding/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="FAST ACCS">
+  <meta property="og:description" content="SMM Market and Global Gifting Service.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/Ejiro-David/fa-logistics-product-images/master/branding/logo-icon-dark.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
 
   <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="FA Logistics — Gift & Food Delivery">
-  <meta name="twitter:description" content="Send flowers, food, and gifts worldwide. 1400+ curated products with fast, reliable delivery.">
-  <meta name="twitter:image" content="https://raw.githubusercontent.com/Ejiro-David/fa-logistics-product-images/master/branding/og-image.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="FAST ACCS">
+  <meta name="twitter:description" content="SMM Market and Global Gifting Service.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/Ejiro-David/fa-logistics-product-images/master/branding/logo-icon-dark.png">
 
-  <meta name="description" content="Send flowers, food, and gifts to the people you care about — fast, smooth, and stress free. 1400+ curated products, delivered worldwide.">
+  <meta name="description" content="SMM Market and Global Gifting Service. Premium products, delivered fast.">
   <meta name="theme-color" content="#07090C">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2255,27 +2255,43 @@ html {
       `).join('');
     }
     
+    function shortenName(name) {
+      // Remove common filler words and clean up
+      let short = name
+        .replace(/[✅|]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (short.length > 45) short = short.substring(0, 42) + '...';
+      return short;
+    }
+
+    function getProductCode(id) {
+      return `PROD-${String(id).padStart(4, '0')}`;
+    }
+
     function proceedToWhatsApp() {
       if (cart.length === 0) return;
       
-      let message = `ORDER SUMMARY\n\n`;
+      let message = `ORDER SUMMARY\n`;
+      message += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
       
       cart.forEach((item, index) => {
-        message += `${index + 1}. ${item.product.name}`;
+        const code = getProductCode(item.product.id);
+        const shortName = shortenName(item.product.name);
+        message += `${index + 1}. ${shortName}\n`;
         if (item.variant) {
-          message += ` (${item.variant.name})`;
+          message += `   ${item.variant.name}\n`;
         }
-        message += ` — ${item.price}\n`;
+        message += `   ${item.price}  [${code}]\n\n`;
       });
       
       const total = cart.reduce((sum, item) => sum + item.priceValue, 0);
-      message += `\nTotal: ₦${total.toLocaleString()}\n`;
-      message += `\n---\n`;
-      message += `DELIVERY DETAILS (please fill in)\n\n`;
-      message += `Receiver's Name:\nFull Address:\nPhone Number:\n\nSender's Name:\n`;
-      message += `\n---\n`;
-      message += `We will confirm availability and estimated delivery date.\n\n`;
-      message += `Thank you for trusting FA Logistics.`;
+      message += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+      message += `Total: ₦${total.toLocaleString()}\n\n`;
+      message += `DELIVERY DETAILS\n\n`;
+      message += `Receiver's Name:\nFull Address:\nPhone Number:\n\nSender's Name:\n\n`;
+      message += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+      message += `We will confirm availability and delivery date.\nThank you — FAST ACCS`;
       
       const encodedMessage = encodeURIComponent(message);
       const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;

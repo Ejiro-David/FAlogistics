@@ -1,0 +1,8 @@
+first lets rename the project, it's no longer simple valentinepage
+
+it is FA Loogistics Shop
+
+now, create a new branch for us to work on on git hub.. products sorting and updates. minor ui display fixes
+
+[DO NOT CODE, YOU OUTPUT ON THIS PHASE SHOULD BE YOUR PLAN FOR REVIEW AND APPROVAL, ALONG WITH SUGGESTIONS AND NOTES ON ANYTHING I MIGHT BE MISSING, REMEMBER THAT WE'LL ALWAYS ADOPT A MINIMALIST APPROACH TO THINGS]
+
