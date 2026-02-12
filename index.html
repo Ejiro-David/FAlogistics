@@ -1621,11 +1621,12 @@ html {
     <div class="filter-section">
       <div class="filter-pills" id="filterPills">
         <div class="filter-pill active" data-filter="all">All Products</div>
-        <div class="filter-pill" data-filter="hot">Hot Items</div>
-        <div class="filter-pill" data-filter="budget-friendly">Budget-Friendly</div>
-        <div class="filter-pill" data-filter="best-value">Best Value</div>
+        <div class="filter-pill" data-filter="hot">🔥 Hot Items</div>
+        <div class="filter-pill" data-filter="under50k">Under ₦50k</div>
+        <div class="filter-pill" data-filter="budget-friendly">💰 Budget-Friendly</div>
+        <div class="filter-pill" data-filter="best-value">⭐ Best Value</div>
         <div class="filter-pill" data-filter="under100k">Under ₦100k</div>
-        <div class="filter-pill" data-filter="premium">💎Premium</div>
+        <div class="filter-pill" data-filter="premium">💎 Premium</div>
         <div class="filter-pill" data-filter="categories" id="categoriesToggle">📂 Categories</div>
       </div>
     </div>
@@ -1885,7 +1886,7 @@ html {
         
         // Validate and create product (allow products with no final_price if they have variants)
         if (cleanFields.length >= 2 && cleanFields[0]) {
-          const [name, description, finalPrice, variantsPrices, imageUrl] = cleanFields;
+          const [prodId, name, description, finalPrice, variantsPrices, imageUrl] = cleanFields;
           const variants = parseVariants(variantsPrices || '');
           
           // Determine display price: use final_price if available, else first variant price
@@ -1904,13 +1905,14 @@ html {
           
           const product = {
             id: productId++,
-            name: name.replace(/\n/g, ' ').trim(),
+            productId: prodId || '',
+            name: name ? name.replace(/\n/g, ' ').trim() : '',
             description: description && description !== 'No description' ? description.replace(/\n/g, ' ').trim() : '',
             price: displayPrice,
             priceValue: displayPriceValue,
             variants: variants,
-            category: categorizeProduct(name),
-            emoji: getProductEmoji(name),
+            category: categorizeProduct(name || ''),
+            emoji: getProductEmoji(name || ''),
             imageUrl: imageUrl || ''
           };
           
@@ -2472,15 +2474,17 @@ html {
         products = products.filter(product => {
           switch(activeFilter) {
             case 'hot':
-              return product.category === 'Food' || product.priceValue > 100000;
+              return product.category === 'Food' || product.category === 'Flowers' || product.category === 'Teddy Bears';
+            case 'under50k':
+              return product.priceValue > 0 && product.priceValue < 50000;
             case 'budget-friendly':
-              return product.priceValue < 50000;
+              return product.priceValue > 0 && product.priceValue <= 60000;
             case 'best-value':
-              return product.priceValue >= 50000 && product.priceValue <= 100000;
+              return product.priceValue >= 50000 && product.priceValue <= 90000;
             case 'under100k':
-              return product.priceValue < 100000;
+              return product.priceValue > 0 && product.priceValue < 100000;
             case 'premium':
-              return product.priceValue > 150000;
+              return product.priceValue >= 120000;
             default:
               return true;
           }
@@ -2513,8 +2517,8 @@ html {
       const keywords = categoryFilters[category] || [];
       
       if (category === 'trending') {
-        // Show items with high engagement (expensive + popular categories)
-        filteredProducts = allProducts.filter(p => p.priceValue > 50000 && p.priceValue < 150000).slice(0, 50);
+        // Show items with good engagement (mid-range popular items)
+        filteredProducts = allProducts.filter(p => p.priceValue > 40000 && p.priceValue < 100000).slice(0, 50);
       } else {
         filteredProducts = allProducts.filter(product => {
           const searchText = `${product.name} ${product.description}`.toLowerCase();
