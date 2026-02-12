@@ -6,3 +6,9 @@ now, create a new branch for us to work on on git hub.. products sorting and upd
 
 [DO NOT CODE, YOU OUTPUT ON THIS PHASE SHOULD BE YOUR PLAN FOR REVIEW AND APPROVAL, ALONG WITH SUGGESTIONS AND NOTES ON ANYTHING I MIGHT BE MISSING, REMEMBER THAT WE'LL ALWAYS ADOPT A MINIMALIST APPROACH TO THINGS]
 
+when an item is clicked for more details the image zooms in in a way that crops some details out, can we handle that gracefully? whats you plan
+
+the text that goes to whatsapp has to be, a lot less cluttered, so I'm thinking. short short product name, ID and image link with price, or just link and price? lets discuss this.
+
+this site check out has to indicate that some prices may be negotiable or require confirmation depending on destination country. should maybe ask for input on delivery country and state
+, so it routes to WA with more details already filled in, we need to talk about the flow for this
