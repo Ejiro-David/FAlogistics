@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FA Logistics - Staff Lookup</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="../assets/fa-mark-white-transparent.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/fa-mark-white-transparent.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body class="staff-page">
+  <header class="staff-header">
+    <div class="staff-brand">
+      <a href="https://fastaccs.com/FAlogistics/" class="staff-logo">
+        <img src="../assets/fa-mark-white-transparent.png" alt="FA Logistics" width="516" height="548">
+      </a>
+      <div>
+        <div class="staff-title">FA Logistics</div>
+        <div class="staff-subtitle">Staff Lookup</div>
+      </div>
+    </div>
+    <a class="staff-home-link" href="https://fastaccs.com/FAlogistics/">Open Storefront</a>
+  </header>
+
+  <main class="staff-main">
+    <section class="staff-search">
+      <label class="staff-label" for="staffSearch">Search Products</label>
+      <div class="staff-search-row">
+        <input
+          id="staffSearch"
+          class="staff-input"
+          type="search"
+          placeholder="Search by product ID, name, or keyword"
+          autocomplete="off"
+        >
+        <button class="staff-clear" id="staffClear" type="button">Clear</button>
+      </div>
+      <div class="staff-hint">Examples: PROD-1435, teddy, pizza, bracelet</div>
+    </section>
+
+    <section class="staff-results">
+      <div class="staff-results-header">
+        <div class="staff-results-count" id="staffResultsCount">Type to search</div>
+        <div class="staff-status" id="staffStatus"></div>
+      </div>
+      <div class="staff-grid" id="staffResultsGrid"></div>
+      <div class="staff-empty" id="staffEmpty" style="display: none;">No products found</div>
+    </section>
+  </main>
+
+  <script src="../staff.js" defer></script>
+</body>
+</html>

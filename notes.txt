@@ -1,2 +1,0 @@
-Note: Your remote URL contains a GitHub Personal Access Token embedded in plain text. This is a security risk — the token is visible in the git config and in this report. Consider using SSH keys or the Git credential helper instead, and rotate/revoke that token.
-
