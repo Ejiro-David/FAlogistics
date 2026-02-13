@@ -439,6 +439,16 @@ body.no-scroll {
   letter-spacing: 0.05em;
 }
 
+.product-badge.delivery {
+  top: auto;
+  bottom: 8px;
+  left: 8px;
+  right: auto;
+  background: rgba(105,109,250,0.9);
+  color: #fff;
+  font-size: 9px;
+}
+
 .product-info {
   padding: 12px;
 }
@@ -1787,6 +1797,7 @@ html {
       <div class="filter-pills" id="filterPills">
         <div class="filter-pill active" data-filter="all">All Products</div>
         <div class="filter-pill" data-filter="hot">🔥 Hot Items</div>
+        <div class="filter-pill" data-filter="same-day">⚡ Same Day Delivery</div>
         <div class="filter-pill" data-filter="under50k">Under ₦50k</div>
         <div class="filter-pill" data-filter="budget-friendly">💰 Budget-Friendly</div>
         <div class="filter-pill" data-filter="best-value">⭐ Best Value</div>
@@ -1923,7 +1934,7 @@ html {
         <h2 class="checkout-form-title">📍 Delivery Location</h2>
         <button class="modal-close" id="checkoutFormClose">×</button>
       </div>
-      <p class="checkout-form-subtitle">Select your delivery destination so we can confirm availability and give you an accurate quote.</p>
+      <p class="checkout-form-subtitle">Select your delivery destination</p>
       <div class="checkout-field">
         <label class="checkout-label" for="checkoutCountry">Country</label>
         <select class="checkout-select" id="checkoutCountry">
@@ -2104,17 +2115,21 @@ html {
           // Skip products with no price at all (no final_price AND no variant prices)
           if (!displayPrice) continue;
           
+          const descClean = description && description !== 'No description' ? description.replace(/\n/g, ' ').trim() : '';
+          const isSameDay = descClean.toLowerCase().includes('same day delivery');
+          
           const product = {
             id: productId++,
             productId: prodId || '',
             name: name ? name.replace(/\n/g, ' ').trim() : '',
-            description: description && description !== 'No description' ? description.replace(/\n/g, ' ').trim() : '',
+            description: descClean,
             price: displayPrice,
             priceValue: displayPriceValue,
             variants: variants,
             category: categorizeProduct(name || ''),
             emoji: getProductEmoji(name || ''),
-            imageUrl: imageUrl || ''
+            imageUrl: imageUrl || '',
+            sameDay: isSameDay
           };
           
           products.push(product);
@@ -2163,15 +2178,16 @@ html {
       if (nameLower.match(/ring|necklace|earring|bracelet|jewelry|jewel/i)) return 'Jewelry';
       if (nameLower.match(/teddy|bear|plush|stuffed/i)) return 'Teddy Bears';
       if (nameLower.match(/rose|flower|bouquet|soap flower/i)) return 'Flowers';
-      if (nameLower.match(/gift basket|gift box|gift set/i)) return 'Gift Baskets';
-      if (nameLower.match(/pizza|burger|chicken|sandwich|pasta|italian|asian/i)) return 'Food';
+      if (nameLower.match(/gift basket|gift box|gift set|gift hamper/i)) return 'Gift Baskets';
+      if (nameLower.match(/pizza|burger|chicken|sandwich|pasta|italian|asian|quesadilla|pie|sesame/i)) return 'Food';
+      if (nameLower.match(/cake.*wine|cake.*champagne|wine.*cake|wine.*roses/i)) return 'Wine & Treats';
       if (nameLower.match(/custom|personalized|photo|print|mug|blanket|t-shirt|hoodie|card/i)) return 'Custom Items';
       if (nameLower.match(/christmas|xmas|santa|tree/i)) return 'Christmas';
       if (nameLower.match(/watch|wristwatch/i)) return 'Watches';
       if (nameLower.match(/key fob|remote|tesla|bmw|mercedes/i)) return 'Car Keys';
       if (nameLower.match(/military|army|camo|uniform/i)) return 'Military';
       if (nameLower.match(/underwear|boxer|brief/i)) return 'Underwear';
-      if (nameLower.match(/wine|chocolate|ferrero/i)) return 'Wine & Treats';
+      if (nameLower.match(/wine|chocolate|ferrero|champagne/i)) return 'Wine & Treats';
       
       return 'Other';
     }
@@ -2196,6 +2212,10 @@ html {
       if (nameLower.match(/mug|cup/i)) return '☕';
       if (nameLower.match(/photo|picture/i)) return '📸';
       if (nameLower.match(/card/i)) return '💌';
+      if (nameLower.match(/quesadilla/i)) return '🌮';
+      if (nameLower.match(/pie/i)) return '🥧';
+      if (nameLower.match(/sesame/i)) return '🍛';
+      if (nameLower.match(/cake/i)) return '🎂';
       if (nameLower.match(/key/i)) return '🔑';
       
       return '📦';
@@ -2236,6 +2256,7 @@ html {
         : '';
       
       const badge = getProductBadge(product);
+      const deliveryBadge = product.sameDay ? '<div class="product-badge delivery">⚡ Same Day</div>' : '';
       
       const imageContent = product.imageUrl 
         ? `<img src="${product.imageUrl}" alt="${product.name}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${product.emoji}</span>';">`
@@ -2245,6 +2266,7 @@ html {
         <div class="product-card" data-product-id="${product.id}">
           <div class="product-image">
             ${badge}
+            ${deliveryBadge}
             ${imageContent}
           </div>
           <div class="product-info">
@@ -2785,6 +2807,8 @@ html {
               return product.priceValue >= 50000 && product.priceValue <= 90000;
             case 'under100k':
               return product.priceValue > 0 && product.priceValue < 100000;
+            case 'same-day':
+              return product.sameDay === true;
             case 'premium':
               return product.priceValue >= 120000;
             default:
