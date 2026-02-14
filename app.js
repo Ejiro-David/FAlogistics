@@ -39,7 +39,7 @@ async function loadProducts(retryCount = 0) {
   try {
     grid.innerHTML = '<div class="loading" role="status" aria-live="polite">Loading products…</div>';
 
-    const response = await fetch('products.csv', { cache: 'force-cache' });
+    const response = await fetch(`products.csv?v=${Date.now()}`, { cache: 'no-store' });
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
@@ -87,11 +87,21 @@ async function loadProducts(retryCount = 0) {
 }
 
 function prioritizeProducts(products) {
+  const featuredIds = ['PROD-1487', 'PROD-1488'];
   const priorityKeywords = ['flower', 'rose', 'bouquet', 'pizza', 'drink', 'beverage', 'chicken', 'ring', 'engagement', 'wedding', 'document', 'certificate', 'processing'];
+  const featuredMap = new Map();
+
+  products.forEach(product => {
+    if (featuredIds.includes(product.productId)) {
+      featuredMap.set(product.productId, product);
+    }
+  });
+
+  const remaining = products.filter(product => !featuredMap.has(product.productId));
   const priority = [];
   const other = [];
 
-  products.forEach(product => {
+  remaining.forEach(product => {
     const text = (product.name + ' ' + product.description).toLowerCase();
     if (priorityKeywords.some(kw => text.includes(kw))) {
       priority.push(product);
@@ -100,7 +110,23 @@ function prioritizeProducts(products) {
     }
   });
 
-  return [...priority, ...other];
+  const prioritized = [...priority, ...other];
+  const firstFeatured = featuredMap.get(featuredIds[0]);
+  const secondFeatured = featuredMap.get(featuredIds[1]);
+
+  if (firstFeatured && secondFeatured) {
+    const splitIndex = Math.min(10, prioritized.length);
+    return [
+      firstFeatured,
+      ...prioritized.slice(0, splitIndex),
+      secondFeatured,
+      ...prioritized.slice(splitIndex)
+    ];
+  }
+
+  if (firstFeatured) return [firstFeatured, ...prioritized];
+  if (secondFeatured) return [secondFeatured, ...prioritized];
+  return prioritized;
 }
 
 // Parse CSV with proper handling of quotes, commas, and newlines
@@ -517,14 +543,16 @@ function renderCartItems() {
         ${item.variant ? `<div class="cart-item-variant">${item.variant.name}</div>` : ''}
         <div class="cart-item-price">${item.price}${item.qty > 1 ? ` × ${item.qty} = ₦${(item.priceValue * item.qty).toLocaleString()}` : ''}</div>
       </div>
-      <div class="cart-item-qty">
-        <button class="qty-btn qty-minus" onclick="updateQty(${item.id}, -1)" aria-label="Decrease quantity">−</button>
-        <span class="qty-value">${item.qty}</span>
-        <button class="qty-btn qty-plus" onclick="updateQty(${item.id}, 1)" aria-label="Increase quantity">+</button>
+      <div class="cart-item-controls">
+        <div class="cart-item-qty">
+          <button class="qty-btn qty-minus" onclick="updateQty(${item.id}, -1)" aria-label="Decrease quantity">−</button>
+          <span class="qty-value">${item.qty}</span>
+          <button class="qty-btn qty-plus" onclick="updateQty(${item.id}, 1)" aria-label="Increase quantity">+</button>
+        </div>
+        <button class="cart-item-remove" onclick="removeFromCart(${item.id})" aria-label="Remove ${item.product.name} from cart">
+          ×
+        </button>
       </div>
-      <button class="cart-item-remove" onclick="removeFromCart(${item.id})" aria-label="Remove ${item.product.name} from cart">
-        ×
-      </button>
     </div>
   `}).join('');
 }
@@ -794,6 +822,9 @@ function fuzzyMatch(str, pattern) {
   if (strLower.includes(patternLower)) return 2;
   const words = strLower.split(/\s+/);
   if (words.some(word => word.startsWith(patternLower))) return 1.5;
+  // Subsequence fallback is useful for very short typos; disable for longer terms
+  // to avoid broad unrelated matches.
+  if (patternLower.length >= 4) return 0;
   let patternIdx = 0;
   for (let i = 0; i < strLower.length && patternIdx < patternLower.length; i++) {
     if (strLower[i] === patternLower[patternIdx]) patternIdx++;

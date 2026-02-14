@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /staff.html
 Disallow: /stafflookup/
 
 Sitemap: https://fastaccs.com/FAlogistics/sitemap.xml

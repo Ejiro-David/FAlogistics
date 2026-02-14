@@ -175,6 +175,16 @@ function scoreProduct(product, term) {
   return score;
 }
 
+function getStaffImageUrl(imageUrl) {
+  const value = String(imageUrl || '').trim();
+  if (!value) return '';
+  if (/^(https?:)?\/\//i.test(value) || value.startsWith('data:')) return value;
+  if (value.startsWith('assets/')) {
+    return new URL(`../${value}`, window.location.href).href;
+  }
+  return new URL(value, window.location.href).href;
+}
+
 function renderResults(results, totalMatches) {
   const grid = document.getElementById('staffResultsGrid');
   const empty = document.getElementById('staffEmpty');
@@ -195,12 +205,13 @@ function renderResults(results, totalMatches) {
   const html = results.map(product => {
     const priceDisplay = product.variants.length > 0 ? `From ${product.price}` : product.price;
     const link = `${STORE_URL}?product=${encodeURIComponent(product.productId)}`;
+    const imageUrl = getStaffImageUrl(product.imageUrl);
     const variantsHtml = product.variants.length > 0
       ? `<details class="staff-variants"><summary>Options (${product.variants.length})</summary>${product.variants.map(v => `<div class="staff-variant">${escapeHtml(v.name)} - ${escapeHtml(v.price)}</div>`).join('')}</details>`
       : '';
 
-    const imageContent = product.imageUrl
-      ? `<img src="${escapeHtml(product.imageUrl)}" alt="${escapeHtml(product.name)}" loading="lazy" decoding="async">`
+    const imageContent = imageUrl
+      ? `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(product.name)}" loading="lazy" decoding="async">`
       : `<div class="staff-image-fallback">No Image</div>`;
 
     return `
@@ -208,7 +219,7 @@ function renderResults(results, totalMatches) {
            data-product-id="${escapeHtml(product.productId)}"
            data-name="${escapeHtml(product.name)}"
            data-price="${escapeHtml(priceDisplay)}"
-           data-image="${escapeHtml(product.imageUrl || '')}"
+           data-image="${escapeHtml(imageUrl)}"
            data-link="${escapeHtml(link)}">
         <div class="staff-image">
           ${product.sameDay ? '<div class="staff-badge">Same Day</div>' : ''}
@@ -306,7 +317,7 @@ async function loadProducts() {
   const count = document.getElementById('staffResultsCount');
   if (count) count.textContent = 'Loading products...';
   try {
-    const response = await fetch('../products.csv', { cache: 'force-cache' });
+    const response = await fetch(`../products.csv?v=${Date.now()}`, { cache: 'no-store' });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const csvText = await response.text();
     allProducts = parseCSV(csvText);
