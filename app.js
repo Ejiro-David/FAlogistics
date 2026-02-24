@@ -1275,3 +1275,35 @@ if (loadSentinel) loadMoreObserver.observe(loadSentinel);
 
 // ── Initialize ──
 loadProducts();
+
+// ── Hero Slideshow ──
+(function () {
+  const el = document.getElementById('heroSlide');
+  if (!el) return;
+
+  const slides = [
+    "Send Love, Instantly, Anywhere.",
+    "No stress. No stories. We deliver.",
+    "US, Canada, UK, Europe & Asia — we're already there.",
+    "We Deliver Fast.",
+    "Same-day cakes. Fresh flowers. Delivered.",
+    "Thoughtfully chosen. Beautifully delivered.",
+    "Pizza delivered in the US — 30 minutes or less.",
+    "We Deliver Anywhere.",
+    "1,500+ premium gifts to choose from.",
+    "WE DELIVER.",
+  ];
+
+  let current = 0;
+
+  function nextSlide() {
+    current = (current + 1) % slides.length;
+    el.classList.remove('slide-in');
+    void el.offsetWidth; // force reflow to restart animation
+    el.textContent = slides[current];
+    el.classList.add('slide-in');
+  }
+
+  el.classList.add('slide-in');
+  setInterval(nextSlide, 3000);
+})();
