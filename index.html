@@ -29,7 +29,7 @@
   <meta name="theme-color" content="#07090C">
 
   <!-- Canonical URL -->
-  <link rel="canonical" href="https://fastaccs.com/FAlogistics/">
+  <link rel="canonical" href="https://fastaccs.com/logistics/">
 
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
@@ -37,8 +37,8 @@
     "@context": "https://schema.org",
     "@type": "Store",
     "name": "FA Logistics",
-    "url": "https://fastaccs.com/FAlogistics/",
-    "logo": "https://raw.githubusercontent.com/Ejiro-David/FAlogistics/master/assets/fa-logo-green-black-bg.png",
+    "url": "https://fastaccs.com/logistics/",
+    "logo": "https://raw.githubusercontent.com/fa-technologies-LTD/logistics/master/assets/fa-logo-green-black-bg.png",
     "description": "1500+ curated gifts delivered worldwide. Same day delivery available.",
     "telephone": "+2347066399871",
     "address": {
@@ -50,7 +50,7 @@
     ],
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://fastaccs.com/FAlogistics/?q={search_term_string}",
+      "target": "https://fastaccs.com/logistics/?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   }
@@ -60,7 +60,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://i.ibb.co">
   <link rel="preconnect" href="https://raw.githubusercontent.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -118,6 +118,7 @@
       </div>
     </div>
     <!-- Filter Pills -->
+    <div class="filter-scroll-wrap" id="filterScrollWrap">
     <div class="filter-section">
       <div class="filter-pills" id="filterPills">
         <div class="filter-pill active" data-filter="all">All Products</div>
@@ -131,6 +132,8 @@
         <div class="filter-pill" data-filter="categories" id="categoriesToggle">📂 Categories</div>
       </div>
     </div>
+    <span class="scroll-hint" aria-hidden="true">›</span>
+    </div><!-- /.filter-scroll-wrap -->
     <!-- Category Pills (revealed by Categories toggle) -->
     <div class="category-pills-section" id="categoryPillsSection">
       <div class="category-pills" id="categoryPills">
@@ -155,11 +158,6 @@
 
   <!-- Main Content -->
   <main class="main" id="products">
-    <div class="results-info" id="resultsInfo">
-      <span class="results-count" id="resultsCount">Loading...</span>
-      <span class="results-subtext">Fresh selections added weekly</span>
-    </div>
-    
     <div class="products-grid" id="productsGrid">
       <div class="loading">Loading products...</div>
     </div>

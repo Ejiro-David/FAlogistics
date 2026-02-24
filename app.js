@@ -916,10 +916,7 @@ function filterByCategory(category) {
 }
 
 function updateResultsCount() {
-  const count = filteredProducts.length;
-  const total = allProducts.length;
-  document.getElementById('resultsCount').textContent =
-    `Showing ${count.toLocaleString()} of ${total.toLocaleString()} products`;
+  // results bar removed
 }
 
 // ── URL Persistence for Filters ──
@@ -1209,9 +1206,7 @@ searchInput.addEventListener('blur', () => {
 // =========================================================
 
 const heroSection = document.getElementById('heroSection');
-const resultsInfo = document.getElementById('resultsInfo');
 let ticking = false;
-let hasShownResults = false;
 
 function handleScroll() {
   const scrollY = window.scrollY;
@@ -1220,11 +1215,6 @@ function handleScroll() {
   if (heroSection && scrollY < heroHeight) {
     heroSection.style.transform = `translateY(${scrollY * 0.5}px)`;
     heroSection.style.opacity = 1 - (scrollY / heroHeight) * 0.7;
-  }
-
-  if (resultsInfo && scrollY > heroHeight * 0.3 && !hasShownResults) {
-    resultsInfo.classList.add('show');
-    hasShownResults = true;
   }
 
   const backToTop = document.getElementById('backToTop');
@@ -1238,6 +1228,18 @@ function handleScroll() {
 window.addEventListener('scroll', () => {
   if (!ticking) { window.requestAnimationFrame(handleScroll); ticking = true; }
 });
+
+// Filter scroll hint
+const filterScrollWrap = document.getElementById('filterScrollWrap');
+const filterSectionEl = filterScrollWrap?.querySelector('.filter-section');
+if (filterSectionEl && filterScrollWrap) {
+  const checkScrollEnd = () => {
+    const atEnd = filterSectionEl.scrollLeft + filterSectionEl.clientWidth >= filterSectionEl.scrollWidth - 8;
+    filterScrollWrap.classList.toggle('at-end', atEnd);
+  };
+  filterSectionEl.addEventListener('scroll', checkScrollEnd, { passive: true });
+  checkScrollEnd();
+}
 
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
