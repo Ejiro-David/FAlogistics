@@ -20,6 +20,38 @@ let selectedVariant = null;
 let cart = [];
 let displayedCount = 0;
 
+// Lightweight GA4 helper — silently no-ops if gtag is unavailable
+function trackEvent(name, params = {}) {
+  try {
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+      window.gtag('event', name, params);
+    }
+  } catch (e) { /* no-op */ }
+}
+
+function cartToAnalyticsItems() {
+  return cart.map(item => {
+    const priceValue = normalizePriceValue(item.price, item.priceValue);
+    const base = {
+      item_id: item.product.productId || item.product.id,
+      item_name: item.product.name,
+      item_category: item.product.category,
+      price: priceValue,
+      quantity: item.qty
+    };
+
+    if (item.variant) base.item_variant = item.variant.name;
+    return base;
+  });
+}
+
+// Ensure priceValue is a finite number and syncs with price string
+function normalizePriceValue(priceStr, priceValue) {
+  const numeric = Number(priceValue);
+  if (Number.isFinite(numeric)) return numeric;
+  return parsePriceValue(priceStr || '0');
+}
+
 // ── Cart Persistence ──
 try {
   const savedCart = localStorage.getItem('faLogisticsCart');
@@ -87,7 +119,7 @@ async function loadProducts(retryCount = 0) {
 }
 
 function prioritizeProducts(products) {
-  const featuredIds = ['PROD-1487', 'PROD-1488'];
+  const featuredIds = ['PROD-1492', 'PROD-1489']; // Fresh Flower Bouquet, 2-in-1 Pizza Deal
   const priorityKeywords = ['flower', 'rose', 'bouquet', 'pizza', 'drink', 'beverage', 'chicken', 'ring', 'engagement', 'wedding', 'document', 'certificate', 'processing'];
   const featuredMap = new Map();
 
@@ -421,6 +453,10 @@ function addToCart(product, variant = null) {
     ((!item.variant && !variant) || (item.variant && variant && item.variant.name === variant.name))
   );
 
+  const priceStr = variant ? variant.price : product.price;
+  const priceVal = normalizePriceValue(priceStr, variant ? variant.priceValue : product.priceValue);
+  const safePriceStr = priceStr || `₦${priceVal.toLocaleString()}`;
+
   if (existingIdx >= 0) {
     cart[existingIdx].qty += 1;
   } else {
@@ -428,14 +464,26 @@ function addToCart(product, variant = null) {
       id: Date.now(),
       product: product,
       variant: variant,
-      price: variant ? variant.price : product.price,
-      priceValue: variant ? variant.priceValue : product.priceValue,
+      price: safePriceStr,
+      priceValue: priceVal,
       qty: 1
     });
   }
 
   saveCart();
   updateCartUI();
+  trackEvent('add_to_cart', {
+    currency: 'NGN',
+    value: priceVal,
+    items: [{
+      item_id: product.productId || product.id,
+      item_name: product.name,
+      item_category: product.category,
+      item_variant: variant ? variant.name : undefined,
+      price: priceVal,
+      quantity: 1
+    }]
+  });
   hideModal();
   showCartNotification();
 }
@@ -528,10 +576,15 @@ function renderCartItems() {
   }
 
   footer.style.display = 'block';
-  const total = cart.reduce((sum, item) => sum + (item.priceValue * item.qty), 0);
+  const total = cart.reduce((sum, item) => {
+    const priceVal = normalizePriceValue(item.price, item.priceValue);
+    return sum + (priceVal * item.qty);
+  }, 0);
   totalAmount.textContent = `₦${total.toLocaleString()}`;
 
   container.innerHTML = cart.map(item => {
+    const priceVal = normalizePriceValue(item.price, item.priceValue);
+    const priceStr = item.price || `₦${priceVal.toLocaleString()}`;
     const thumbContent = item.product.imageUrl
       ? `<img src="${item.product.imageUrl}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${item.product.emoji}</span>';">`
       : `<span>${item.product.emoji}</span>`;
@@ -541,7 +594,7 @@ function renderCartItems() {
       <div class="cart-item-details">
         <div class="cart-item-name">${item.product.name}</div>
         ${item.variant ? `<div class="cart-item-variant">${item.variant.name}</div>` : ''}
-        <div class="cart-item-price">${item.price}${item.qty > 1 ? ` × ${item.qty} = ₦${(item.priceValue * item.qty).toLocaleString()}` : ''}</div>
+          <div class="cart-item-price">${priceStr}${item.qty > 1 ? ` × ${item.qty} = ₦${(priceVal * item.qty).toLocaleString()}` : ''}</div>
       </div>
       <div class="cart-item-controls">
         <div class="cart-item-qty">
@@ -721,6 +774,12 @@ function getProductCode(product) {
 
 function proceedToWhatsApp() {
   if (cart.length === 0) return;
+  const total = cart.reduce((sum, item) => sum + (item.priceValue * item.qty), 0);
+  trackEvent('checkout_open', {
+    currency: 'NGN',
+    value: total,
+    items: cartToAnalyticsItems()
+  });
   showCheckoutForm();
 }
 
@@ -787,15 +846,17 @@ function sendToWhatsApp() {
 
   cart.forEach((item, index) => {
     const code = getProductCode(item.product);
+    const priceVal = normalizePriceValue(item.price, item.priceValue);
+    const priceStr = item.price || `₦${priceVal.toLocaleString()}`;
     const qtyStr = item.qty > 1 ? ` ×${item.qty}` : '';
-    const lineTotal = item.qty > 1 ? ` = ₦${(item.priceValue * item.qty).toLocaleString()}` : '';
-    message += `${index + 1}. ${code} — ${item.price}${qtyStr}${lineTotal}\n`;
+    const lineTotal = item.qty > 1 ? ` = ₦${(priceVal * item.qty).toLocaleString()}` : '';
+    message += `${index + 1}. ${code} — ${priceStr}${qtyStr}${lineTotal}\n`;
     if (item.variant) {
       message += `   ↳ ${item.variant.name}\n`;
     }
   });
 
-  const total = cart.reduce((sum, item) => sum + (item.priceValue * item.qty), 0);
+  const total = cart.reduce((sum, item) => sum + (normalizePriceValue(item.price, item.priceValue) * item.qty), 0);
   message += `\n━━━━━━━━━━━━━━━━━━━━━━\n`;
   message += `TOTAL: ₦${total.toLocaleString()}\n\n`;
 
@@ -806,6 +867,15 @@ function sendToWhatsApp() {
 
   message += `━━━━━━━━━━━━━━━━━━━━━━\n`;
   message += `Prices may vary by destination.\n\nWe'll confirm final pricing & delivery time.\n\n— FA Logistics`;
+
+  trackEvent('whatsapp_click', {
+    currency: 'NGN',
+    value: total,
+    items: cartToAnalyticsItems(),
+    checkout_country: country || 'unspecified',
+    checkout_state: state || '',
+    checkout_city: city || ''
+  });
 
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
   hideCheckoutForm();
@@ -1284,11 +1354,12 @@ loadProducts();
   const slides = [
     "Send Love, Instantly, Anywhere.",
     "No stress. No stories. We deliver.",
-    "US, Canada, UK, Europe & Asia — we're already there.",
     "We Deliver Fast.",
     "Same-day cakes. Fresh flowers. Delivered.",
+    "Under 50k? We've got you covered.",
+    "For Him or Her, we deliver 💚.",
     "Thoughtfully chosen. Beautifully delivered.",
-    "Pizza delivered in the US — 30 minutes or less.",
+    "Pizza delivered in the US in 30 minutes.",
     "We Deliver Anywhere.",
     "1,500+ premium gifts to choose from.",
     "WE DELIVER.",
