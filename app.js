@@ -677,7 +677,7 @@ function showProductDetail(productId) {
   }
 
   document.getElementById('detailImage').innerHTML = product.imageUrl
-    ? `<img src="${product.imageUrl}" alt="${product.name}" decoding="async" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${product.emoji}</span>';">`
+    ? `<img src="${product.imageUrl}" alt="${product.name}" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${product.emoji}</span>';">`
     : `<span>${product.emoji}</span>`;
 
   const badge = getProductBadge(product);
@@ -835,9 +835,16 @@ function sendToWhatsApp() {
   const country = document.getElementById('checkoutCountry').value;
   const state = document.getElementById('checkoutState').value;
   const city = document.getElementById('checkoutCity').value.trim();
+  const agreeCheckbox = document.getElementById('checkoutAgree');
 
   if (!country) {
     document.getElementById('checkoutCountry').focus();
+    return;
+  }
+
+  if (!agreeCheckbox.checked) {
+    alert('Please agree to the Terms and Refund Policy to continue.');
+    agreeCheckbox.focus();
     return;
   }
 

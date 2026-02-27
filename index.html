@@ -15,15 +15,15 @@
   <meta property="og:site_name" content="FA LOGISTICS">
   <meta property="og:title" content="FA LOGISTICS — Send Love, Instantly, Anywhere">
   <meta property="og:description" content="Send food and gifts to anyone, anywhere. Same-day delivery available.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/fa-technologies-LTD/logistics/master/assets/fa-logo-green-black-bg.png">
-  <meta property="og:image:width" content="898">
-  <meta property="og:image:height" content="898">
+  <meta property="og:image" content="https://raw.githubusercontent.com/fa-technologies-LTD/logistics/master/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
 
   <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="FA LOGISTICS — Send Love, Instantly, Anywhere">
   <meta name="twitter:description" content="Send food and gifts to anyone, anywhere. Same-day delivery available.">
-  <meta name="twitter:image" content="https://raw.githubusercontent.com/fa-technologies-LTD/logistics/master/assets/fa-logo-green-black-bg.png">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/fa-technologies-LTD/logistics/master/assets/og-image.png">
   <meta name="description" content="1,500+ curated gifts delivered worldwide. Same-day delivery available.">
 
   <!-- Google Analytics (GA4) -->
@@ -185,9 +185,9 @@
     <div class="footer-bottom">
       <div class="footer-credit">© 2026 FA Technologies LTD</div>
       <div class="footer-credit">
-        <a href="logistics/policies.html">Policies</a>
+        <a href="logistics/policies.html" target="_blank">Policies</a>
         <span style="margin: 0 8px;">•</span>
-        <a href="privacy.html">Privacy</a>
+        <a href="privacy.html" target="_blank">Privacy</a>
       </div>
     </div>
   </footer>
@@ -281,6 +281,12 @@
       <div class="checkout-field">
         <label class="checkout-label" for="checkoutCity">City (optional)</label>
         <input type="text" class="checkout-input" id="checkoutCity" placeholder="e.g. Oklahoma, London, Houston…">
+      </div>
+      <div class="checkout-field" style="margin-top: 20px;">
+        <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5;">
+          <input type="checkbox" id="checkoutAgree" style="margin-top: 3px; cursor: pointer;">
+          <span>I agree to the <a href="logistics/policies.html" target="_blank" style="color: var(--primary); text-decoration: underline;">Terms</a> and <a href="logistics/policies.html#refunds" target="_blank" style="color: var(--primary); text-decoration: underline;">Refund Policy</a></span>
+        </label>
       </div>
       <div class="checkout-actions">
         <button class="btn-modal btn-order checkout-send-btn" id="checkoutSendBtn">Send Order via WhatsApp</button>
